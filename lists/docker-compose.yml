@@ -7,13 +7,13 @@ services:
     - ./config/postfix:/etc/service/postfix
     - ./config/mailman-core:/opt/mailman
     - ./data/postfix:/var/spool/postfix
-    environments:
+    environment:
     - MAILNAME=lists.fablab-karlsruhe.de
     - MY_DESTINATION='localhost.localdomain, localhost, lists.fablab-karlsruhe.de'
-    - MY_NETWORKS 172.19.199.0/16 127.0.0.0/8
+    - MY_NETWORKS='172.19.199.0/16 127.0.0.0/8'
     - ROOT_ALIAS=mail@morbi-happens.de
     ports:
-    - 25
+    - 25:25
     networks:
       mailman:
         ipv4_address: 172.19.199.1
