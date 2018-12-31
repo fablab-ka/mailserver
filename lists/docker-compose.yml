@@ -7,7 +7,7 @@ services:
     - ./config/postfix:/etc/postfix/main.cf.d
     - ./config/mailman-core:/opt/mailman
     ports:
-    - 25:25
+    - "25:25"
     networks:
       mailman:
         ipv4_address: 172.19.199.1
@@ -49,7 +49,7 @@ services:
     - SECRET_KEY=supersecretdjangokey
     - UWSGI_STATIC_MAP=/static=/opt/mailman-web-data/static
     ports:
-    - 80:8000
+    - "80:8000"
     networks:
       mailman:
         ipv4_address: 172.19.199.3
