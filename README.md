@@ -8,7 +8,7 @@ Mailu based
 
 ```shell
 cd mail
-docker-compose up
+docker-compose up -d
 ```
 
 ## lists.fablab-karlsruhe.de
@@ -17,6 +17,6 @@ Mailman 3 based
 
 ```shell
 cd lists
-docker-compose up
+docker-compose up -d
 docker-compose exec mailman-web python manage.py createsuperuser
 ```

@@ -4,13 +4,15 @@ services:
   postfix:
     image: tozd/postfix:alpine-38
     volumes:
-    - ./config/postfix:/etc/service/postfix
+    - ./config/postfix/run.config:/etc/service/postfix/run.config
+    - ./config/postfix/main.cf:/etc/postfix/main.cf.append
     - ./config/mailman-core:/opt/mailman
-    - ./data/postfix:/var/spool/postfix
+    - ./data/postfix/spool:/var/spool/postfix
+    - ./data/postfix/log:/var/log/postfix
     environment:
     - MAILNAME=lists.fablab-karlsruhe.de
     - MY_DESTINATION='localhost.localdomain, localhost, lists.fablab-karlsruhe.de'
-    - MY_NETWORKS='172.19.199.0/16 127.0.0.0/8'
+    - MY_NETWORKS='172.19.199.0/16, 127.0.0.0/8'
     - ROOT_ALIAS=mail@morbi-happens.de
     ports:
     - 25:25
@@ -31,7 +33,7 @@ services:
     - DATABASE_URL=postgres://mailman:mailmanpass@database/mailmandb
     - DATABASE_TYPE=postgres
     - DATABASE_CLASS=mailman.database.postgresql.PostgreSQLDatabase
-    - SMTP_HOST=postfix
+    - SMTP_HOST=172.19.199.1
     - HYPERKITTY_API_KEY=someapikey
     networks:
       mailman:
@@ -53,6 +55,9 @@ services:
     - HYPERKITTY_API_KEY=someapikey
     - SERVE_FROM_DOMAIN=lists.fablab-karlsruhe.de
     - SECRET_KEY=supersecretdjangokey
+    - UWSGI_STATIC_MAP=/static=/opt/mailman-web-data/static
+    ports:
+    - 80:8000
     networks:
       mailman:
         ipv4_address: 172.19.199.3
