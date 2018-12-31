@@ -20,3 +20,7 @@ cd lists
 docker-compose up -d
 docker-compose exec mailman-web python manage.py createsuperuser
 ```
+
+### TODO
+
+* configure the LE certs for postfix
