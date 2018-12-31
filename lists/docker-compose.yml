@@ -2,18 +2,10 @@ version: '2'
 
 services:
   postfix:
-    image: tozd/postfix:alpine-38
+    image: instrumentisto/postfix:3
     volumes:
-    - ./config/postfix/run.config:/etc/service/postfix/run.config
-    - ./config/postfix/main.cf:/etc/postfix/main.cf.append
+    - ./config/postfix:/etc/postfix/main.cf.d
     - ./config/mailman-core:/opt/mailman
-    - ./data/postfix/spool:/var/spool/postfix
-    - ./data/postfix/log:/var/log/postfix
-    environment:
-    - MAILNAME=lists.fablab-karlsruhe.de
-    - MY_DESTINATION='localhost.localdomain, localhost, lists.fablab-karlsruhe.de'
-    - MY_NETWORKS='172.19.199.0/16, 127.0.0.0/8'
-    - ROOT_ALIAS=mail@morbi-happens.de
     ports:
     - 25:25
     networks:
@@ -79,4 +71,4 @@ networks:
   mailman:
     ipam:
       config:
-        - subnet: 172.19.199.0/16
+        - subnet: 172.19.199.0/24

@@ -1,0 +1,2 @@
+myhostname = lists.fablab-karlsruhe.de
+mynetworks = 127.0.0.1/32 172.19.199.0/24
