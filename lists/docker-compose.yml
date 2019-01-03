@@ -19,8 +19,6 @@ services:
     stop_grace_period: 30s
     volumes:
     - ./config/mailman-core:/opt/mailman/
-    links:
-    - database
     depends_on:
     - database
     environment:
@@ -38,10 +36,6 @@ services:
     restart: unless-stopped
     depends_on:
     - database
-    links:
-    - mailman-core
-    - database
-    - postfix
     volumes:
     - ./config/mailman-web:/opt/mailman-web-data
     environment:
