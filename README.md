@@ -4,7 +4,7 @@ The whole setup is currently on two different VMs, each running `docker` and `do
 
 ## mail.fablab-karlsruhe.de
 
-Mailu based
+[Mailu based](https://github.com/Mailu/Mailu/)
 
 ```shell
 cd mail
@@ -16,10 +16,14 @@ docker-compose run --rm admin python manage.py admin root example.net password
 
 ## lists.fablab-karlsruhe.de
 
-Mailman 3 based
+[Mailman 3 based](https://github.com/maxking/docker-mailman)
 
 ```shell
 cd lists
+
+# create htpasswd entry for the site
+htpasswd config/nginx-proxy/htpasswd/lists.fablab-karlsruhe.de fabirus
+
 docker-compose up -d
 
 # create superuser
