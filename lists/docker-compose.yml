@@ -9,12 +9,9 @@ services:
     - ./config/mailman-core:/opt/mailman
     ports:
     - "25:25"
-    networks:
-      mailman:
-        ipv4_address: 172.19.199.1
 
   mailman-core:
-    image: maxking/mailman-core:0.3
+    image: maxking/mailman-core:0.4
     restart: unless-stopped
     stop_grace_period: 30s
     volumes:
@@ -25,16 +22,15 @@ services:
     - DATABASE_URL=postgres://mailman:mailmanpass@database/mailmandb
     - DATABASE_TYPE=postgres
     - DATABASE_CLASS=mailman.database.postgresql.PostgreSQLDatabase
-    - SMTP_HOST=172.19.199.1
     - HYPERKITTY_API_KEY=someapikey
-    networks:
-      mailman:
-        ipv4_address: 172.19.199.2
+    - MTA=postfix
+    - SMTP_HOST=postfix
 
   mailman-web:
-    image: maxking/mailman-web:0.3
+    image: maxking/mailman-web:0.4
     restart: unless-stopped
     depends_on:
+    - mailman-core
     - database
     volumes:
     - ./config/mailman-web:/opt/mailman-web-data
@@ -45,13 +41,11 @@ services:
     - SERVE_FROM_DOMAIN=lists.fablab-karlsruhe.de
     - SECRET_KEY=supersecretdjangokey
     - UWSGI_STATIC_MAP=/static=/opt/mailman-web-data/static
+    - SMTP_HOST=postfix
     - LETSENCRYPT_EMAIL=mail@morbi-happens.de
     - LETSENCRYPT_HOST=lists.fablab-karlsruhe.de
     - VIRTUAL_HOST=lists.fablab-karlsruhe.de
     - VIRTUAL_PORT=8000
-    networks:
-      mailman:
-        ipv4_address: 172.19.199.3
 
   database:
     image: postgres:9.6-alpine
@@ -62,9 +56,6 @@ services:
       POSTGRES_PASSWORD: mailmanpass
     volumes:
     - ./data/postgres:/var/lib/postgresql/data
-    networks:
-      mailman:
-        ipv4_address: 172.19.199.4
 
   nginx-proxy:
     image: jwilder/nginx-proxy
@@ -78,9 +69,6 @@ services:
       - ./data/nginx/vhost.d:/etc/nginx/vhost.d
       - ./data/nginx/html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      mailman:
-        ipv4_address: 172.19.199.5
 
   nginx-letsencrypt-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -90,9 +78,3 @@ services:
     volumes:
       - ./data/nginx/certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-networks:
-  mailman:
-    ipam:
-      config:
-        - subnet: 172.19.199.0/24
