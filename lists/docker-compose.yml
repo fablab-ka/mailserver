@@ -64,6 +64,7 @@ services:
       - 80:80
       - 443:443
     volumes:
+      - ./config/nginx-proxy/htpasswd:/etc/nginx/htpasswd:ro
       - ./data/nginx/certs:/etc/nginx/certs:ro
       - ./data/nginx/conf.d:/etc/nginx/conf.d:rw
       - ./data/nginx/vhost.d:/etc/nginx/vhost.d
